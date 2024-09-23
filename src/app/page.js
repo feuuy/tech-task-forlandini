@@ -1,101 +1,102 @@
-import Image from "next/image";
+"use client";
+
+import React from "react";
+
+import Button from "@/components/Button";
+import Search01Icon from "@/public/search-icon";
+import PlusSignIcon from "@/public/plus";
+import Cancel01Icon from "@/public/cancel";
+import Tick02Icon from "@/public/check";
+import { addWords, searchWords } from "./actions";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isOpen, setIsOpen] = React.useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const toggleModal = (e) => {
+    e.preventDefault();
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <div className="items-center flex flex-col justify-center text-center gap-10 px-10 py-5 md:px-20 md:py-10">
+      <div className="flex flex-col">
+        <h1 className="text-6xl">Search</h1>
+        <h4 className="text-xl">
+          Instantly add & search for words and their synonyms.
+        </h4>
+      </div>
+      <form
+        action={searchWords}
+        className="flex bg-stone-100 dark:bg-stone-900 py-2 px-3 items-center rounded-lg w-full md:w-1/2"
+      >
+        <div className="text-stone-400 dark:text-stone-600 scale-50">
+          <Search01Icon />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <input
+          type="text"
+          id="word"
+          name="word"
+          required
+          className="h-10 bg-transparent outline-none w-full placeholder:text-stone-400 dark:placeholder:text-stone-600"
+          placeholder="Search for a word"
+        />
+        <div className="flex gap-2">
+          <Button
+            icon={<PlusSignIcon />}
+            title="Add"
+            bgColor="bg-white dark:bg-black"
+            color="text-black dark:text-white"
+            showTitleOnHover
+            onClick={toggleModal}
+            type="button"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+          <Button
+            icon={<Search01Icon />}
+            bgColor="bg-black dark:bg-white"
+            color="text-white dark:text-black"
+            title="Search"
+            type="submit"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+        </div>
+      </form>
+      <div
+        className={`backdrop-blur-xl border-black/10 dark:border-white/10 rounded-lg border-2 px-10 py-5 md:px-20 md:py-10 inset-0 md:inset-x-20 md:inset-y-10 absolute transition-all ease-in-out duration-300 ${
+          isOpen ? "scale-100" : "scale-0"
+        }`}
+        style={{ visibility: isOpen ? "visible" : "hidden" }}
+      >
+        <div className="flex justify-end">
+          <Button
+            icon={<Cancel01Icon />}
+            title="Cancel"
+            onClick={toggleModal}
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </div>
+        <div className="flex flex-col gap-10 items-center">
+          <h1 className="text-6xl">Add</h1>
+          <form
+            action={addWords}
+            className="flex bg-stone-100 dark:bg-stone-900 py-2 px-3 items-center rounded-lg w-full md:w-1/2"
+          >
+            <input
+              type="text"
+              id="word"
+              name="words"
+              required
+              className="h-10 bg-transparent outline-none w-full placeholder:text-stone-400 dark:placeholder:text-stone-600"
+              placeholder="Enter a word/synonym"
+            />
+            <Button
+              icon={<PlusSignIcon />}
+              title="Add"
+              bgColor="bg-black dark:bg-white"
+              color="text-white dark:text-black"
+              showTitleOnHover
+              type="submit"
+            />
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
