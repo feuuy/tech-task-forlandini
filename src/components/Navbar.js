@@ -47,19 +47,22 @@ export default function Navbar() {
             <h3 className="text-xl">Searching</h3>
             <p>
               To search for words and their synonyms, simply enter a word into
-              the search bar and click the &quot;Search&quot; button.
+              the search bar and click the <i> Search </i>
+              button or press <i> Enter.</i>
             </p>
           </div>
           <div>
             <h3 className="text-xl">Adding</h3>
             <p>
-              To add new words and synonyms, click the &quot;Add&quot; button. A
-              new window will appear where you can enter the word. Add more
-              words/synonyms by clicking the &quot;Add&quot; button. You can add
-              as many words/synonyms as needed. Once done, you’ll be able to
-              search for these words.
+              To add new words and synonyms, click the
+              <i> Add </i> button. A new window will appear where you can enter
+              the word. Add words/synonyms by separating them with commas. You
+              can add as many words/synonyms as needed. Once done, click
+              <i> Add </i> or press
+              <i> Enter.</i>
             </p>
           </div>
+          <p className="italic text-red-500">Inputs are case-sensitive!</p>
           <p className="italic text-gray-400">
             To close this window, click anywhere on the screen.
           </p>
