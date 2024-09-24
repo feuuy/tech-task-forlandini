@@ -3,6 +3,35 @@
 // In-memory storage for synonyms (consider replacing this with persistent storage)
 const synonyms = {};
 
+// Helper function to propagate synonyms transitively
+function addSynonyms(words) {
+  words.forEach((word) => {
+    if (!synonyms[word]) {
+      synonyms[word] = new Set();
+    }
+
+    // Add each word as a synonym for all the others
+    words.forEach((synonym) => {
+      if (word !== synonym && synonym) {
+        synonyms[word].add(synonym);
+        // Add the current word to the synonym's set as well
+        if (!synonyms[synonym]) {
+          synonyms[synonym] = new Set();
+        }
+        synonyms[synonym].add(word);
+
+        // Now propagate synonyms from synonym's set to the current word's set
+        synonyms[synonym].forEach((indirectSynonym) => {
+          if (indirectSynonym !== word) {
+            synonyms[word].add(indirectSynonym);
+            synonyms[indirectSynonym].add(word);
+          }
+        });
+      }
+    });
+  });
+}
+
 // Search for synonyms of a word
 export async function searchWords(formData) {
   const word = formData.get("search-word")?.toLowerCase().trim(); // Normalize input
@@ -28,17 +57,8 @@ export async function addWords(formData) {
     return "No valid words provided.";
   }
 
-  words.forEach((word) => {
-    if (!synonyms[word]) {
-      synonyms[word] = new Set();
-    }
-
-    words.forEach((synonym) => {
-      if (word !== synonym && synonym) {
-        synonyms[word].add(synonym);
-      }
-    });
-  });
+  // Add words and their synonyms transitively
+  addSynonyms(words);
 
   return synonyms;
 }
