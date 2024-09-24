@@ -66,7 +66,6 @@ export default function Navbar() {
               Once done, click <i>Done</i>.
             </p>
           </div>
-          <p className="italic text-red-500">Inputs are case-sensitive!</p>
           <p className="italic text-gray-400">
             To close this window, click anywhere on the screen.
           </p>
