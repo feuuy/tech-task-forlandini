@@ -1,6 +1,6 @@
 import React from "react";
 
-const Cancel01Icon = (props) => (
+const Tick02Icon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,7 +10,7 @@ const Cancel01Icon = (props) => (
     {...props}
   >
     <path
-      d="M19.0005 4.99988L5.00049 18.9999M5.00049 4.99988L19.0005 18.9999"
+      d="M5 14L8.5 17.5L19 6.5"
       stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
@@ -19,4 +19,4 @@ const Cancel01Icon = (props) => (
   </svg>
 );
 
-export default Cancel01Icon;
+export default Tick02Icon;

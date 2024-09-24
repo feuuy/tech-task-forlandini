@@ -3,7 +3,7 @@
 const synonyms = {};
 
 export async function searchWords(formData) {
-  const word = formData.get("word");
+  const word = formData.get("search-word");
   if (synonyms[word]) {
     return synonyms[word];
   } else {
