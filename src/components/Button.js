@@ -1,11 +1,11 @@
 export default function Button({
-  icon,
-  title,
-  onClick,
-  bgColor,
-  color,
-  rotate,
-  type,
+  icon, // Optional icon component
+  title, // Text for the button
+  onClick, // Function triggered on click
+  bgColor, // Background color class
+  color, // Text color class
+  rotate, // Flag for rotating icon on hover
+  type, // Button type (e.g., submit, button)
 }) {
   return (
     <button
@@ -20,10 +20,11 @@ export default function Button({
             "group-hover:rotate-[360deg] transition-transform ease-in-out duration-300"
           }`}
         >
-          {icon}
+          {icon} {/* Renders the icon, if provided */}
         </div>
       )}
-      <div className="hidden md:flex">{title}</div>
+      <div className="hidden md:flex">{title}</div>{" "}
+      {/* Renders the title, hidden on smaller screens */}
     </button>
   );
 }

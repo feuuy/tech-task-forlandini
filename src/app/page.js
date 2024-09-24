@@ -1,7 +1,6 @@
-"use client";
+"use client"; // Enables client-side rendering
 
 import React from "react";
-
 import Button from "@/components/Button";
 import Search01Icon from "@/public/search-icon";
 import PlusSignIcon from "@/public/plus";
@@ -10,16 +9,20 @@ import Tick02Icon from "@/public/tick";
 import Delete02Icon from "@/public/delete";
 import { addWords, searchWords } from "../actions/actions";
 
+// Main Home component
 export default function Home() {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [searchResult, setSearchResult] = React.useState(null);
-  const [notFound, setNotFound] = React.useState(null);
-  const [inputs, setInputs] = React.useState([{ synonym: "" }]);
+  const [isOpen, setIsOpen] = React.useState(false); // Modal visibility state
+  const [searchResult, setSearchResult] = React.useState(null); // Stores search results
+  const [notFound, setNotFound] = React.useState(null); // Stores not found message
+  const [inputs, setInputs] = React.useState([{ synonym: "" }]); // Synonym input fields
+  const mainWordInputRef = React.useState(null); // Reference for main word input field
 
+  // Adds a new synonym input field
   const handleAddInput = () => {
     setInputs([...inputs, { synonym: "" }]);
   };
 
+  // Updates the value of a specific synonym input
   const handleChange = (event, index) => {
     let { name, value } = event.target;
     let onChangeValue = [...inputs];
@@ -27,16 +30,19 @@ export default function Home() {
     setInputs(onChangeValue);
   };
 
+  // Deletes a specific synonym input
   const handleDeleteInput = (index) => {
     const newArray = [...inputs];
     newArray.splice(index, 1);
     setInputs(newArray);
   };
 
+  // Toggles the visibility of the modal
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
 
+  // Handles search action and displays result or not found message
   const handleSearch = async (formData) => {
     const result = await searchWords(formData);
     if (result instanceof Set) {
@@ -48,26 +54,31 @@ export default function Home() {
     }
   };
 
+  // Handles form submission for adding new words and their synonyms
   const handleAddWords = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const mainWord = formData.get("main-word");
-    console.log(inputs);
     const synonymList = inputs.map((input) => input.synonym).join(", ");
     formData.set("words", `${mainWord}, ${synonymList}`);
-    console.log(formData.get("words"));
     await addWords(formData);
     alert("Words successfully added.");
+    setInputs([{ synonym: "" }]); // Resets inputs after submission
+    mainWordInputRef.current.value = ""; // Clears main word input field
+    setIsOpen(false); // Closes modal
   };
 
   return (
     <div className="items-center flex flex-col justify-center text-center gap-10 px-10 py-5 md:px-20 md:py-10">
+      {/* Search Section */}
       <div className="flex flex-col">
         <h1 className="text-6xl">Search</h1>
         <h4 className="text-xl">
           Instantly add & search for words and their synonyms.
         </h4>
       </div>
+
+      {/* Search Form */}
       <form
         action={handleSearch}
         className="flex bg-stone-100 dark:bg-stone-900 py-2 px-3 items-center rounded-lg w-full md:w-1/2"
@@ -101,6 +112,8 @@ export default function Home() {
           />
         </div>
       </form>
+
+      {/* Display Search Results */}
       {searchResult && !notFound && (
         <div className="flex flex-col gap-5">
           <h3 className="text-xl">Synonyms</h3>
@@ -112,12 +125,15 @@ export default function Home() {
         </div>
       )}
       {notFound && !searchResult && <div>{notFound}</div>}
+
+      {/* Modal for Adding Words */}
       <div
         className={`overflow-y-auto backdrop-blur-xl border-black/10 dark:border-white/10 rounded-lg border-2 px-10 py-5 md:px-20 md:py-10 inset-0 md:inset-x-20 md:inset-y-10 absolute transition-all ease-in-out duration-300 ${
           isOpen ? "scale-100" : "scale-0"
         }`}
         style={{ visibility: isOpen ? "visible" : "hidden" }}
       >
+        {/* Modal Content */}
         <div className="flex justify-end">
           <Button
             icon={<Cancel01Icon />}
@@ -127,11 +143,14 @@ export default function Home() {
         </div>
         <div className="flex flex-col gap-10 items-center">
           <h1 className="text-6xl">Add</h1>
+
+          {/* Form for Adding Words */}
           <form
             onSubmit={handleAddWords}
             className="flex flex-col gap-5 w-full md:w-1/2"
           >
             <input
+              ref={mainWordInputRef}
               type="text"
               id="main-word"
               name="main-word"
@@ -148,7 +167,7 @@ export default function Home() {
                   type="text"
                   name="synonym"
                   id="synonym"
-                  value={item.name}
+                  value={item.synonym}
                   onChange={(event) => handleChange(event, index)}
                   className={`${
                     index === 0 ? "h-12" : "h-10"
