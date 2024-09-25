@@ -1,32 +1,44 @@
 "use server";
 
-// In-memory storage for synonyms (consider replacing this with persistent storage)
+// In-memory storage for synonyms
 const synonyms = {};
 
-// Helper function to propagate synonyms transitively
+function addSynonymsRecursively(word, synonym) {
+  if (!synonyms[word]) {
+    synonyms[word] = new Set();
+  }
+
+  // Add the synonym to the word's synonym set if it's not already there
+  if (!synonyms[word].has(synonym)) {
+    synonyms[word].add(synonym);
+
+    // Make sure the synonym has the word as well
+    if (!synonyms[synonym]) {
+      synonyms[synonym] = new Set();
+    }
+    synonyms[synonym].add(word);
+
+    // Recursively add all the synonyms of the synonym to the word and vice versa
+    synonyms[synonym].forEach((indirectSynonym) => {
+      addSynonymsRecursively(word, indirectSynonym);
+    });
+
+    // Recursively add all the synonyms of the word to the synonym
+    synonyms[word].forEach((indirectSynonym) => {
+      addSynonymsRecursively(synonym, indirectSynonym);
+    });
+  }
+}
+
 function addSynonyms(words) {
   words.forEach((word) => {
     if (!synonyms[word]) {
       synonyms[word] = new Set();
     }
 
-    // Add each word as a synonym for all the others
     words.forEach((synonym) => {
-      if (word !== synonym && synonym) {
-        synonyms[word].add(synonym);
-        // Add the current word to the synonym's set as well
-        if (!synonyms[synonym]) {
-          synonyms[synonym] = new Set();
-        }
-        synonyms[synonym].add(word);
-
-        // Now propagate synonyms from synonym's set to the current word's set
-        synonyms[synonym].forEach((indirectSynonym) => {
-          if (indirectSynonym !== word) {
-            synonyms[word].add(indirectSynonym);
-            synonyms[indirectSynonym].add(word);
-          }
-        });
+      if (word !== synonym) {
+        addSynonymsRecursively(word, synonym);
       }
     });
   });
